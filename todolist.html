@@ -1,0 +1,131 @@
+<html lang="en">
+  <!-- feel free to revise this file -->
+
+  <head>
+    <style>
+      button {
+        padding: 10px 20px;
+        margin: 5px;
+        border-radius: 8px;
+        background: #ffffff;
+        color: #333;
+        border: none;
+        cursor: pointer;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+        transition: all 0.3s ease;
+      }
+
+      button:hover {
+        box-shadow: 0 6px 10px rgba(0, 0, 0, 0.3);
+        transform: translateY(-2px);
+      }
+
+      textarea {
+        width: 80%;
+        height: 80px;
+        margin-bottom: 10px;
+        border-radius: 5px;
+      }
+
+      li {
+        font-size: 30px;
+        text-align: left;
+      }
+      body {
+        font-family: Arial, sans-serif;
+        background: #f4f6f8;
+        text-align: center;
+        margin-left: 20%;
+        margin-right: 20%;
+      }
+
+      div.list {
+        margin-left: 15%;
+      }
+      textarea {
+        resize: none;
+      }
+      .completed {
+        text-decoration: line-through;
+        opacity: 0.6;
+      }
+      .category1 {
+        color: red;
+      }
+      .category2 {
+        color: blue;
+      }
+      .category3 {
+        color: grey;
+      }
+      .categoryDefault {
+        color: black;
+      }
+    </style>
+  </head>
+
+  <body>
+    <h1>TO DO LIST</h1>
+    <textarea id="text" rows="4" placeholder="Enter tasks..."></textarea>
+    <br />
+    <div class="divButton">
+      <button id="btn_add">Add</button>
+      <button id="btn_hide">Toggle</button>
+    </div>
+    <div class="list">
+      <ol id="order_list"></ol>
+    </div>
+  </body>
+
+  <script>
+    const text = document.getElementById("text");
+    const btn_add = document.getElementById("btn_add");
+    const btn_hide = document.getElementById("btn_hide");
+    const order_list = document.getElementById("order_list");
+    let showCompleted = true;
+
+    // Add tasks
+    btn_add.addEventListener("click", () => {
+      const tasks = text.value.split(";");
+      tasks.forEach((task) => {
+        const parts = task.split(",").map((s) => s.trim());
+        const content = parts[0];
+        const category = parts[1] || "";
+
+        if (content) {
+          const li = document.createElement("li");
+          li.textContent = content;
+
+          // Assign category color
+          if (category === "1") li.classList.add("category1");
+          else if (category === "2") li.classList.add("category2");
+          else if (category === "3") li.classList.add("category3");
+          else li.classList.add("categoryDefault");
+
+          // Single click: toggle completion
+          li.addEventListener("click", () => {
+            li.classList.toggle("completed");
+          });
+
+          // Double click: confirm delete
+          li.addEventListener("dblclick", () => {
+            if (confirm("Delete this task?")) {
+              li.remove();
+            }
+          });
+
+          order_list.appendChild(li);
+        }
+      });
+      text.value = "";
+    });
+
+    // Toggle completed tasks visibility
+    btn_hide.addEventListener("click", () => {
+      showCompleted = !showCompleted;
+      document.querySelectorAll(".completed").forEach((li) => {
+        li.style.display = showCompleted ? "list-item" : "none";
+      });
+    });
+  </script>
+</html>
